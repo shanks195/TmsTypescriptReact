@@ -9,13 +9,22 @@ const gListStyle = makeStyles(() => ({
     border: '1px solid #eee'
   },
   active: {
+    '& .items.wh-full': {
+      boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.16)',
+      '& li': {
+        border: 'solid 1px #d5d5d5',
+      }
+    },
     '& .ava-root': {
       backgroundColor: '#1825aa',
-      color: '#ffffff'
+      color: '#ffffff',
     },
     '& .tex-root': {
       color: '#1825aa',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      '& span': {
+        fontWeight: '500'
+      }
     }
   },
   total: {

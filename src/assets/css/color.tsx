@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 const colorStyle = makeStyles(() => ({
   "@global": {
     ".bg-primary,.btn-primary": {
-      backgroundColor: "var(--mscb-primary)",
+      backgroundColor: "var(--mscb-primary)!important",
       color: "#fff"
     },
     ".bg-secondary,.btn-secondary": {

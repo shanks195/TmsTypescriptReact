@@ -1,26 +1,26 @@
 import { makeStyles } from "@mui/styles";
 import sign from "assets/images/bg/chu_ky.svg";
-import up from "assets/images/bg/upload_sign_image.png";
+import up from "assets/images/bg/signature-upload-logo.png";
 
 const signStyle = makeStyles(() => ({
-
     rootDrop: {
         '& .contain-drop': {
-            height: '100%',
-            overflow: 'auto'
+            // height: '400px',
+            width: '96%'
         },
         '& .containers': {
-            transform: 'translateY(-100%)'
+            // transform: 'translateY(-100%)'
         },
         '& .drop-containers': {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0',
+            margin: 0,
             height: '250px',
             border: '4px #edeef0',
-            marginTop: '250px',
-            backgroundColor: '#e6eaf3'
+            // marginTop: '250px',
+            backgroundColor: '#f2f5ff',
+            width: '100%'
         },
         '& .drop-message': {
             textAlign: 'center',
@@ -30,12 +30,13 @@ const signStyle = makeStyles(() => ({
         },
         '& .upload-icon': {
             width: '140px',
-            height: '160px',
+            height: '128px',
             background: `url(${up}) no-repeat center center`,
             backgroundSize: '100%',
             textAlign: 'center',
             margin: '0 auto',
-            paddingTop: '30px',
+            boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.16)',
+            // paddingTop: '30px',
             '& svg': {
                 fontSize: '2.8cm'
             }
@@ -44,14 +45,16 @@ const signStyle = makeStyles(() => ({
             display: 'none'
         },
         '& .file-display-containers': {
-            position: 'fixed',
-            width: '100%'
+            // position: 'fixed',
+            width: '100%',
+            marginTop: '28px',
+            marginBottom: '20px',
         },
         '& .file-status-bar': {
             width: '100%',
             verticalAlign: 'top',
             marginTop: '10px',
-            marginBottom: '20px',
+            marginBottom: '0',
             position: 'relative',
             lineHeight: '50px',
             height: '50px'
@@ -78,29 +81,34 @@ const signStyle = makeStyles(() => ({
         },
     },
     mainRoot: {
-        marginLeft: '10px',
+        paddingLeft:"30px",
+        '& .MuiTypography-h6':{
+            fontSize: '16px',
+            lineHeight: '20px'
+        },
+        '& .mscb-signature-format-title':{
+            paddingTop: '10.5px',
+            paddingBottom: '5px'
+        },'& .mscb-signature-condition-title':{
+            paddingTop: '10.5px',
+            paddingBottom: '5px'
+        },
+        '& .mscb-signature-label':{
+            padding: '0',
+            marginBottom: '14px',
+        },
+        '& .MuiTypography-subtitle2':{
+            fontWeight: 600,
+        },
         '& .signa-row': {
-            '& .title': {
-                fontSize: '16px',
-                fontWeight: 'bold'
-            },
-            '& .label-signa': {
-                width: '100%',
-                fontWeight: 'bold',
-                fontSize: '15px',
-                color: 'rgb(24, 24, 160)',
-                marginTop: '15px',
-                paddingBottom: '10px !important'
-            },
-            '& .title-rule': {
-                fontSize: '16px',
-                fontWeight: 'bold'
-            },
             '& .check-format': {
                 display: 'inline-flex',
                 verticalAlign: '-1px',
                 flexDirection: 'column',
-                marginTop: '-35px'
+                marginTop: '-35px',
+                '& span.MuiTypography-root.MuiTypography-body1.MuiFormControlLabel-label': {
+                    fontSize: '14px',
+                }
             },
         },
 

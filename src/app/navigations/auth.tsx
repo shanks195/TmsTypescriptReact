@@ -1,12 +1,12 @@
-import React from "react";
-import PAGE_URL from "../PageURL";
+import { lazy } from "react";
 import { IRoute } from "types";
+import PAGE_URL from "../PageURL";
 
 const AuthRoutes: IRoute[] = [
   {
     path: PAGE_URL.Login,
     exact: true,
-    component: React.lazy(() => import("views/pages/Login"))
+    component: lazy(() => import('views/pages/Login'))
   }
 ];
 

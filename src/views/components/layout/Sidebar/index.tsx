@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import clsx from 'clsx';
 import sidebarStyle from './style';
-import ScrollBar from 'react-perfect-scrollbar';
+import Scrollbar from '../Scrollbar';
 
 import Brand from '../Brand';
 import User from '../User';
 import Navbar from './Navbar';
 import Copyright from './Copyright';
+import SidebarGlobal from './Global';
 
 const Sidebar: FC = () => {
 
@@ -17,16 +18,14 @@ const Sidebar: FC = () => {
     <div className="flex-column relative h-full">
       <Brand />
       <User />
-      <div className={ classes.sidebar }>
-        <ScrollBar
-          options={{ suppressScrollX: true }}
-          className={ clsx('relative', classes.scrollable) }
-        >
+      <div className={ clsx(classes.sidebar, 'mscb-sidebar-navbar') }>
+        <Scrollbar className={ clsx('relative') }>
           <Navbar className={ classes.navigation } classPanel={ classes.panel } />
-        </ScrollBar>
+        </Scrollbar>
       </div>
       <Copyright className={ classes.copyright } />
     </div>
+    <SidebarGlobal />
   </div>
 
 }

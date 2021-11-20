@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import clsx from 'clsx';
 
 export interface FlagIconProps{
@@ -6,7 +6,7 @@ export interface FlagIconProps{
   code: string;
 }
 
-const FlagIcon: React.FC<FlagIconProps> = props => {
+const FlagIcon: FC<FlagIconProps> = props => {
 
   const { className, code } = props;
   const iconClass = clsx('mscb-flag-icon flag-icon', 'flag-icon-' + code, className);

@@ -1,8 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { contentType } from "utils";
-import { IHeaderRequest, IDataRequest, IResponse, IApiResponse } from "types";
+import { contentType, decodeToken, getAuthHeader } from "utils";
+import { IHeaderRequest, IDataRequest, IResponse, IApiResponse, IApiPaging } from "types";
 import {
   API_BASE_URL,
+  APP_AUTH_ENABLE,
   ON_FETCH_ERROR,
   ON_PARSE_ERROR,
   ON_RESPONSE_ERROR
@@ -36,36 +37,55 @@ function execApi<T>(
   data?: IDataRequest,
   headers?: IHeaderRequest,
   configs?: AxiosRequestConfig
-): IResponse<T> {
+) {
   configs = configs ?? {};
   Object.assign(configs, { url: uri, method, headers, data: null });
-
   if (data) {
     if (configs.method === EMethod.GET) configs.method = EMethod.POST;
 
     if (data instanceof FormData) {
-      headers = Object.assign(headers, contentType(EContentType.BINARY));
+      // Object.assign("headers", contentType(EContentType.BINARY));
       configs.data = data;
     } else {
-      configs.data = JSON.stringify(data);
+      configs.data = data;//JSON.stringify(data);
     }
   }
+  Object.assign(configs, { headers: configs.headers || {} });
 
+  APP_AUTH_ENABLE
+    && !configs.headers.Authorization
+    && Object.assign(configs.headers, getAuthHeader(decodeToken().token + '1'));
   return API.request(configs)
     .then((response) => {
       const result: IApiResponse<T> = {
         data: null,
         success: false,
-        errors: []
+        errors: [],
       };
+
+      const result1: IApiPaging<T> = {
+        ...result,
+        current_page: 1,
+        total_items: 0,
+        total_page: 0
+      };
+
+      let hasPaging = false;
 
       try {
         result.success = Math.floor(response.status / 200) === 1;
 
         if (result.success) {
-          result.data = response.data.data;
+          result.data = response.data;
           result.success = true;
           result.errors = [];
+
+          if ('total_page' in response.data) {
+            hasPaging = true;
+            result1.total_page = response.data.total_page ?? 0;
+            result1.total_items = response.data.total_items ?? 0;
+            result1.current_page = response.data.current_page ?? 1;
+          }
         } else {
           result.errors = response.data.errors ?? ON_RESPONSE_ERROR;
         }
@@ -73,12 +93,11 @@ function execApi<T>(
         result.errors = ON_PARSE_ERROR;
       }
 
-      return result;
+      return hasPaging ? { ...result1, ...result } as IApiPaging<T> : result;
     })
     .catch((error) => {
-      console.log("API :: error");
       if (error.response && error.response.data) {
-        const response = error.response.data as IApiResponse<T>;
+        const response = error.response.data;
         response.success = false;
         return response;
       } else {
@@ -132,7 +151,7 @@ export function apiDelete<T>(
   headers?: IHeaderRequest,
   configs?: AxiosRequestConfig
 ): IResponse<T> {
-  return execApi(EMethod.PATCH, uri, data, headers, configs);
+  return execApi(EMethod.DELETE, uri, data, headers, configs);
 }
 
 export function apiHead<T>(

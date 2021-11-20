@@ -11,7 +11,7 @@ const Copyright: FC<CopyrightProps> = props => {
   const { className } = props;
   const { t } = useTranslation();
 
-  return <div className={ clsx('flex-center w-full', className) }>
+  return <div className={ clsx('flex-center w-full mscb-sidebar-copyright', className) }>
     { t('App.Copyright') }
   </div>
 

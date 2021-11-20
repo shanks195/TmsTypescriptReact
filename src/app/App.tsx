@@ -1,6 +1,7 @@
 import { FC, useEffect, Suspense } from 'react';
-import history from './history';
-import store from './store';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import i18n from './i18n';
 import theme from './theme';
 import Loading from 'views/components/base/Loading';
@@ -10,14 +11,14 @@ import AuthContext from 'views/includes/AuthContext';
 import Guard from 'views/includes/Guard';
 import PAGE_URL from './PageURL';
 import AuthRoutes from './navigations/auth';
-import { I18nextProvider, useTranslation } from 'react-i18next';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter, Route, Router, Switch } from 'react-router-dom';
+import store from './store';
 
 const App: FC = () => {
 
   const { t } = useTranslation();
+  // const location = useLocation()
+  // const isAuth = useSelector(getIsAuth);
 
   useEffect(() => {
     document.title = t('App.Name');
@@ -30,32 +31,25 @@ const App: FC = () => {
           <Suspense fallback={ <Loading /> }>
 
             <CssBaseline />
-            <GlobalCss />
-
+            <StyledEngineProvider injectFirst>
+              <GlobalCss />
+            </StyledEngineProvider>
             <BrowserRouter basename={ PAGE_URL.BASE }>
-              <Router history={ history }>
                 <AuthContext>
-                  <Switch>
-                    {AuthRoutes.map((route, i) => (
-                      <Route
-                        key={i}
-                        exact={ route.exact }
-                        path={route.path}
-                        component={route.component}
-                      />
-                    ))}
-                    <Route path="/">
-                      <Guard />
-                    </Route>
-                  </Switch>
+                  <Routes>
+                      <Route path="/*" element={ <Guard /> } />
+                      {AuthRoutes.map((route, i) => {
+                        const { component: AuthComponent, path = '/' } = route;
+                        return <Route key={ i } path={ path } element={ AuthComponent ? <AuthComponent />: null } />
+                      })}
+                  </Routes>
                 </AuthContext>
-              </Router>
             </BrowserRouter>
-
           </Suspense>
         </ThemeProvider>
       </I18nextProvider>
     </Provider>
+    
   )
 
 }

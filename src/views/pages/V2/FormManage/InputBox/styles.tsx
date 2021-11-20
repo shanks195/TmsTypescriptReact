@@ -6,37 +6,61 @@ const inputBoxStyle = makeStyles(() => ({
         paddingLeft: '30px',
         '& .mscb-input-box-format':{
             marginBottom: '50px',
+            '& .MuiTypography-h6':{
+                fontSize: '16px',
+                lineHeight: '20px'
+            },
             '& .mscb-input-box-title':{
-                padding: '5px 0'
+                paddingTop: '10.5px',
+                paddingBottom: '5px'
             },
             '& .mscb-input-box-input_type':{
-                maxWidth: '227px'
+                maxWidth: '227px',
+                '& input': {
+                    '&::placeholder': {
+                        fontStyle: 'italic',
+                        fontWeight: 300,
+                        fontSize: '14px'
+                    }
+                }
             },
             '& .mscb-input-box-option_form':{
-                padding: '0 39px'
+                padding: '0 0 0 39px'
             }
         },
         '& .mscb-input-box-condition':{
+            '& .MuiTypography-h6':{
+                fontSize: '16px',
+                lineHeight: '20px'
+            },
             '& .mscb-input-box-title':{
-                padding: '5px 0'
+                paddingTop: '10.5px',
+                paddingBottom: '5px'
             },
             '& .mscb-input-box-input_limit':{
-                maxWidth: '114px'
+                maxWidth: '114px',
+                '& input': {
+                    '&::placeholder': {
+                        fontStyle: 'italic',
+                        fontWeight: 300,
+                        fontSize: '14px'
+                    }
+                }
             },
             '& .mscb-input-box-type_form':{
                 paddingLeft: '39px'
             }
         },
         '& .mscb-input-box-label':{
-        padding: '5px 0 10px 0'
+        padding: '5px 0 10px 0',
+        },
+        '& .MuiTypography-subtitle2':{
+            fontWeight: 600,
         },
         '& .mscb-input .MuiInputBase-input':{
         fontSize: '15px'
         },
-        '& .css-14wntxf-MuiTypography-root':{
-        fontSize: '1rem'
-        },
-        '& .css-j204z7-MuiFormControlLabel-root .MuiFormControlLabel-label':{
+        '& .MuiFormControlLabel-label':{
         fontSize: '0.9rem'
         },
         '& .MuiSvgIcon-root':{

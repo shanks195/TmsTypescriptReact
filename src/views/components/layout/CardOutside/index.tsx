@@ -1,34 +1,35 @@
-import React from 'react';
+import { FC, ReactNode } from 'react';
 import clsx from 'clsx';
 import outsideStyle from './style';
 
 export interface CardOutsideProps{
   className?: string;
-  extra?: React.ReactNode;
+  extra?: ReactNode;
+  extraClass?: string;
   id?: string;
-  label?: React.ReactNode;
+  label?: ReactNode;
 }
 
-const CardOutside: React.FC<CardOutsideProps> = props => {
+const CardOutside: FC<CardOutsideProps> = props => {
 
   const classes = outsideStyle();
-  const { children, className, extra, id, label } = props;
+  const { children, className, extra, extraClass, id, label } = props;
   const cardClass = clsx(classes.root, 'mscb-outside-card relative', className);
 
   return <div className={ cardClass } id={ id }>
     {
       !!label && 
-      <div className={ clsx(classes.label, 'ellipsis bg-white text-upper text-primary') }>
+      <div className={ clsx(classes.label, 'mscb-outside-card-label ellipsis bg-white text-upper text-primary') }>
         { label }
       </div>
     }
     {
       !!extra &&
-      <div className="absolute right top">
+      <div className={ clsx('mscb-outside-card-extra', extraClass) }>
         { extra }
       </div>
     }
-    <div className={ clsx(classes.content, 'shadow bg-white') }>
+    <div className={ clsx(classes.content, 'mscb-outside-card-content shadow bg-white') }>
       { children }
     </div>
   </div>

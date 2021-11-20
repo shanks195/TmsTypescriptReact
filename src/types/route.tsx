@@ -1,4 +1,4 @@
-import { IRouteComponent } from "./base";
+import { ComponentType, ReactNode } from 'react';
 
 export interface IBadge {
   color: string;
@@ -7,14 +7,15 @@ export interface IBadge {
 
 export interface IRoute {
   path?: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   iconText?: string;
   name?: string;
   label?: string;
-  component?: IRouteComponent;
+  component?: ComponentType<any> | null;
   badge?: IBadge;
   auth?: string[];
   children?: IRoute[];
   type?: string;
   exact?: boolean;
+  isRoute?: boolean;
 }

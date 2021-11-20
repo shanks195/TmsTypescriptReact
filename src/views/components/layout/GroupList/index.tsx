@@ -18,14 +18,16 @@ export interface GroupListRef {
 export interface IGroupList {
   key: string | number;
   value: string | number;
-  label?: string
+  label?: string;
+  isGroup?: boolean;
 }
 
 export interface GroupListProps {
-  onChange?(): void;
+  onChange?(value: IGroupList): void;
   options?: IGroupList[];
   type?: string;
   typeTMS?: boolean;
+  defaultActive?: string | number;
 }
 
 export interface GroupListBaseComponent
@@ -33,13 +35,14 @@ export interface GroupListBaseComponent
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const GroupListBase: GroupListBaseComponent = (props, ref) => {
-  const { options = [], type, typeTMS = true } = props;
+  const { options = [], type, typeTMS = true, defaultActive, onChange } = props;
 
   const classes = gListStyle();
-  const [itemActive, setItemActive] = React.useState<string | number>();
+  const [itemActive, setItemActive] = React.useState<string | number |undefined>(defaultActive);
 
   const handleCheck = (value: IGroupList) => {
     setItemActive(value.key);
+    onChange && onChange(value);
   };
 
   return (

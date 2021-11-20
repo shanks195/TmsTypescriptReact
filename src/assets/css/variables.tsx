@@ -13,9 +13,10 @@ const variablesStyle = makeStyles((theme: Theme) => ({
       "--mscb-yellow": "#f8ad08",
       "--mscb-pink": "#5b6bff",
       "--mscb-black": "#33375d",
+      "--mscb-white": "#fff",
       "--mscb-fontsize": "14px",
       "--mscb-sidebar-width": "288px",
-      "--mscb-sidebar-compact-width": "70px",
+      "--mscb-sidebar-collapsed-width": "70px",
       "--mscb-sidebar-padding": "20px",
       "--mscb-topbar-height": "66px"
     }

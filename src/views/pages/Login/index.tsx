@@ -1,9 +1,9 @@
 import { FC, useRef, useState, useEffect, MouseEvent, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { getIsAuth, getIsFetching, login } from "features/auth/store/slice";
+import { Link,useLocation } from "react-router-dom";
+import { getAuthErrors, getIsAuth, getIsFetching, login } from "features/auth/store/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { IValidate } from "types";
-import { getValidate } from "utils";
+import { getValidate, updateDocumentTitle } from "utils";
 import { useTranslation } from "react-i18next";
 import Input, { InputRef } from "views/components/base/Input";
 import Checkbox, { CheckboxRef } from "views/components/base/Checkbox";
@@ -21,6 +21,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import Loading from "views/components/base/Loading";
 import Language from "views/components/layout/Language";
+import ScrollBar from "react-perfect-scrollbar";
+import AlertMessage from "views/components/layout/AlertMessage";
 
 const LoginPage: FC = () => {
   const classes = loginStyle();
@@ -31,6 +33,7 @@ const LoginPage: FC = () => {
 
   const isFetching = useSelector(getIsFetching);
   const isAuth = useSelector(getIsAuth);
+  const errors = useSelector(getAuthErrors);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -38,7 +41,11 @@ const LoginPage: FC = () => {
   const [ msgUsername, setMsgUsername ] =useState<IValidate>(getValidate());
   const [ msgPassword, setMsgPassword ] =useState<IValidate>(getValidate());
 
- useEffect(() => {console.log(isAuth)
+  useEffect(() => {
+    updateDocumentTitle(t('Pages.Login.Title'));
+  });
+
+ useEffect(() => {
     isAuth && history.push(PAGE_URL.Dashboard);
   }, [ isAuth ]);
 
@@ -68,27 +75,24 @@ const LoginPage: FC = () => {
       return false;
     }
 
-    if (_password.length < 8){
-      setMsgPassword(getValidate('Common.Error.MinLength', { name: labelPassword, length: 8 }));
-      return false;
-    }
-
     setMsgPassword(getValidate());
     return true;
   }
+
 
   const validate = () => validateUsername() && validatePassword();
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => event.preventDefault();
-
+  const location = useLocation();
   const handleClickLogin = () => {
     if (isFetching || !validate()) return;
 
     const data = {
       username: getUsername(),
       password: getPassword(),
-      remember: remember.current?.getChecked()[0] ?? false
+      remember: remember.current?.getChecked()[0] ?? false,
+      state: location.state
     }
 
     dispatch(login(data));
@@ -113,68 +117,78 @@ const LoginPage: FC = () => {
 
   return (
     <div className={loginClass}>
+      { 
+        !!errors?.length && 
+        <AlertMessage open variant="error" autoClose>
+          { errors[0].detail }
+        </AlertMessage>
+      }
       <Grid container className="h-full">
-        <Grid item lg={8} md={8} sm={6} xs={false}></Grid>
-        <Grid item lg={4} md={4} sm={6} xs={12}>
-          <div className="px-20 bg-white h-full relative flex-column flex-center">
-            <div className="w-full">
-              <Typography component="h1" variant="h4">
-                <span className={titleClass}>{ t('Pages.Login.Title') }</span>
-              </Typography>
-              <Box component="p" className="text-primary mt-6">
-                { t('Pages.Login.Description', { app_name: t('App.Name') }) }
-              </Box>
-              <Box component="div" className="mt-8">
-
-                <Input
-                  ref={ username }
-                  label={ labelUsername }
-                  placeholder={ labelEnter }
-                  message={ msgUsername.message ? t(msgUsername.message, msgUsername.params) : '' }
-                />
-                
-                <Input
-                  ref={ password }
-                  type={ showPassword ? 'text' : 'password' }
-                  label={ labelPassword }
-                  placeholder={ labelEnter }
-                  suffix={ AddonPassword }
-                  message={ msgPassword.message ? t(msgPassword.message, msgPassword.params) : '' }
-                />
-                
-                <div className="flex justify-between items-center mb-3">
-                  <Checkbox ref={ remember } className="text-primary">
-                    { labelRemember }
-                  </Checkbox>
-                  <Link to="" className="text-primary">
-                    <em>{ t('Pages.Login.Forgot') }</em>
-                  </Link>
-                </div>
-
-                <div className="flex flex-wrap items-center mb-4">
-                  <div className="relative w-full">
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      fullWidth
-                      style={{ height: '48px' }}
-                      onClick={ handleClickLogin }
-                    >
-                      { isFetching ? <Loading /> : t('Pages.Login.Button') }
-                    </Button>
-                    
+        <Grid item lg={8} md={6} sm={6} xs={false}></Grid>
+        <Grid item lg={4} md={6} sm={6} xs={12} className="h-full">
+          <ScrollBar className="h-full" options={{ suppressScrollX: true }} >
+            <div className="px-20 bg-white h-full relative flex-column flex-center">
+              <div className="w-full">
+                <Typography component="h1" variant="h4">
+                  <span className={titleClass}>{ t('Pages.Login.Title') }</span>
+                </Typography>
+                <Box component="p" className="text-primary mt-6">
+                  { t('Pages.Login.Description', { app_name: t('App.Name') }) }
+                </Box>
+                <Box component="div" className="mt-8">
+                  <Box component="div" className='user-input-box'>
+                      <Input
+                        ref={ username }
+                        label={ labelUsername }
+                        placeholder={ labelEnter }
+                        message={ msgUsername.message ? t(msgUsername.message, msgUsername.params) : '' }
+                      />
+                  </Box>
+                  <Box component="div" className='pass-input-box'>
+                    <Input
+                      ref={ password }
+                      type={ showPassword ? 'text' : 'password' }
+                      label={ labelPassword }
+                      placeholder={ labelEnter }
+                      suffix={ AddonPassword }
+                      message={ msgPassword.message ? t(msgPassword.message, msgPassword.params) : '' }
+                    />
+                  </Box>
+                  
+                  <div className="flex justify-between items-center mb-3">
+                    <Checkbox ref={ remember } className="text-primary">
+                      { labelRemember }
+                    </Checkbox>
+                    <Link to="" className="text-primary">
+                      <em>{ t('Pages.Login.Forgot') }</em>
+                    </Link>
                   </div>
+
+                  <div className="flex flex-wrap items-center mb-4">
+                    <div className="relative w-full">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        fullWidth
+                        style={{ height: '48px' }}
+                        onClick={ handleClickLogin }
+                      >
+                        { isFetching ? <Loading /> : t('Pages.Login.Button') }
+                      </Button>
+                      
+                    </div>
+                  </div>
+                  
+                </Box>
+
+                <div className="flex-center">
+                  <Language />
                 </div>
-                
-              </Box>
 
-              <div className="flex-center">
-                <Language />
               </div>
-
             </div>
-          </div>
+          </ScrollBar>
         </Grid>
       </Grid>
     </div>

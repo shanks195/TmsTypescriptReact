@@ -1,9 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { InputRef } from 'views/components/base/Input';
 import Checkbox from 'views/components/base/Checkbox';
+import { useTranslation } from 'react-i18next';
 import signStyle from "./style";
+import AlertMessage from 'views/components/layout/AlertMessage';
 
 interface FormSignaturesProps {
 }
@@ -17,6 +21,12 @@ const FormManageSignatures: FormManageSignaturesComponent = () => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [validFiles, setValidFiles] = useState<File[]>([]);
     const [unsupportedFiles, setUnsupportedFiles] = useState<File[]>([]);
+    // translation
+    const { t } = useTranslation();
+    const titleFormat= t('Common.Input.Format.Title');
+    const upSignature = t('Pages.Layout.Group.Group.UpSign');
+    const titleRule = t('Common.Input.Condition.Title');
+    const labelSmall= t('Pages.Layout.Group.Group.TitleSmall');
 
     const CheckboxState = [
         { id: 1, code: "Checkbox", name: ".png" },
@@ -57,7 +67,7 @@ const FormManageSignatures: FormManageSignaturesComponent = () => {
     }
 
     const validateFile = (file: File) => {
-        const validTypes = ['image/jpg', 'image/png'];
+        const validTypes = ['image/jpg', 'image/jpeg', 'image/png'];
         if (validTypes.indexOf(file.type) === -1) {
             return false;
         }
@@ -69,7 +79,10 @@ const FormManageSignatures: FormManageSignaturesComponent = () => {
             if (validateFile(files[i])) {
                 setSelectedFiles((prevArray: File[]) => [...prevArray, files[i]]);
             } else {
-                setSelectedFiles((prevArray: File[]) => [...prevArray, files[i]]);
+                // setSelectedFiles((prevArray: File[]) => [...prevArray, files[i]]);
+                <AlertMessage open variant="error" autoClose>
+                    {String(`Không đúng định dạng file`)}
+                </AlertMessage>
                 setUnsupportedFiles((prevArray: File[]) => [...prevArray, files[i]]);
             }
         }
@@ -103,8 +116,8 @@ const FormManageSignatures: FormManageSignaturesComponent = () => {
 
     const DropZone = () => {
         return (
-            <div className={clsx(classes.rootDrop, 'wh-full')}>
-                <Grid className="contain-drop">
+            <Grid container className={clsx(classes.rootDrop,'mscb-signature-dropzone' )}>
+                <Grid item xs={8} className="contain-drop">
                     <div className="containers">
                         <div className="drop-containers"
                             onDragOver={dragOver}
@@ -139,21 +152,29 @@ const FormManageSignatures: FormManageSignaturesComponent = () => {
                         </div>
                     </div>
                 </Grid>
-            </div>
+            </Grid>
         )
     }
 
     return (
-        <div className={clsx(classes.mainRoot, 'wh-full')}>
+        <div className={clsx(classes.mainRoot, 'mscb-input-type-signature')}>
         <Grid className="signa-row">
                 <Grid className="signa-format">
-                    <span className="title">I. ĐỊNH DẠNG</span>
-                    <p className="label-signa">1. Cập nhật chữ ký</p>
+                    <Box component="div" className='mscb-signature-format-title text-upper'>
+                        <Typography variant="h6" color="var(--mscb-black)">I. {titleFormat}</Typography>
+                    </Box> 
+                    <Box component="div" className='mscb-signature-label'>
+                        <Typography variant="subtitle2" color="primary">1. {upSignature}</Typography>
+                    </Box>
                     <DropZone />
                 </Grid>
                 <Grid className="signa-rule">
-                    <span className="title-rule">II. ĐIỀU KIỆN</span>
-                    <p className="label-signa">1. Định dạng</p>
+                    <Box component="div" className='mscb-signature-condition-title text-upper'>
+                        <Typography variant="h6" color="var(--mscb-black)">II. {titleRule}</Typography>
+                    </Box>
+                    <Box component="div" className='mscb-signature-label'>
+                        <Typography variant="subtitle2" color="primary">1. {labelSmall}</Typography>
+                    </Box>
                     <div className="format_option">
                         <Checkbox className="check-format"
                             options={

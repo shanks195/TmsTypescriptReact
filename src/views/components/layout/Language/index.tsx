@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, memo, useRef } from 'react';
 import clsx from 'clsx';
 import langStyle from './style';
 import FlagIcon from 'views/components/base/FlagIcon';
@@ -12,10 +12,10 @@ export interface ILanguageProps{
   variant?: 'outlined' | 'filled';
 }
 
-const Language: React.FC<ILanguageProps> = props => {
+const Language: FC<ILanguageProps> = props => {
 
   const classes = langStyle();
-  const selectRef = React.useRef<SelectRef>(null);
+  const selectRef = useRef<SelectRef>(null);
   const { variant = 'filled' } = props;
   const { i18n } = useTranslation();
 
@@ -25,6 +25,7 @@ const Language: React.FC<ILanguageProps> = props => {
   }
 
   return <Select 
+    fullWidth={ false }
     ref={ selectRef }
     onChange={ changeLang }
     className={ clsx(classes.root, 'language', variant) }
@@ -44,4 +45,4 @@ const Language: React.FC<ILanguageProps> = props => {
 
 }
 
-export default React.memo(Language);
+export default memo(Language);

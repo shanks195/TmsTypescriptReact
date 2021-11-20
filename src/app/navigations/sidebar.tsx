@@ -1,12 +1,11 @@
 import PAGE_URL from 'app/PageURL';
+import LeftSideBarPaths from 'features/templateGroups/models/paths';
 import React from 'react';
-import { FaBookDead, FaChartBar, FaUserFriends } from 'react-icons/fa';
-import { VscCircleOutline } from 'react-icons/vsc';
+import { FaChartBar, FaDatabase } from 'react-icons/fa';
 import { IRoute } from 'types';
-import { formatPath } from 'utils';
+import { AiFillFile } from 'react-icons/ai';
 
 const SidebarRoutes: IRoute[] = [
-
   {
     name: 'Pages.Dashboard.Sidebar',
     path: PAGE_URL.Dashboard,
@@ -15,36 +14,47 @@ const SidebarRoutes: IRoute[] = [
     component: React.lazy(() => import('views/pages/Dashboard'))
   },
   {
-    name: "Example",
-    icon: <VscCircleOutline />,
-    children: [
+    name: 'CẤU TẠO HỆ THỐNG',
+    icon: <FaDatabase />,
+    children:[
       {
-        name: 'Base',
-        
-       
+        name: 'Pages example',
+        path: PAGE_URL.example,
+        component: React.lazy(() => import('views/pages/V2/example')),
       },
-      
-    ]
-  },
-  {
-    name: 'Pages.Credit.Init',
-    path: PAGE_URL.Credit.Normal.Primary,
-    icon: <FaUserFriends />,
-    component: React.lazy(() => import('views/pages/Credit/Normal')),
-    children: [
       {
-        name: 'Pages.Credit.Normal.Sidebar',
-        path: formatPath('/credit/normal/init/:id/product', 'new')
-      }
+        name: 'Pages.Layout.Group',
+        path: PAGE_URL.V2.InputType,
+        component: React.lazy(() => import('views/pages/V2/FormManage'))
+      },
+      {
+        name: 'Pages.Metadata.Sidebar',
+        path: PAGE_URL.V2.Metadata.main,
+        component: React.lazy(() => import('views/pages/V2/FormMetadata'))
+      },
+      {
+        name: 'Pages.Group.Sidebar',
+        path: PAGE_URL.V2.FormGroup.main,
+        component: React.lazy(() => import('views/pages/V2/FormGroup'))
+      },
+      {
+        name: 'Pages.Metadata.Treeview',
+        path: PAGE_URL.V2.Treeview.main,
+        component: React.lazy(() => import('views/pages/V2/FormManageTreeView'))
+      },
     ]
   },
-  
   {
-    name: 'Pages.Layout.Group',
-    path: PAGE_URL.V2,
-    icon: <FaBookDead />,
-    component: React.lazy(() => import('views/pages/V2/FormManage'))
-  }
+    name: 'Quản lý biểu mẫu',
+    path: PAGE_URL.V2.Operate.Detail.Route,
+    component: React.lazy(() => import('views/pages/V2/Operate')),
+    type: 'api',
+    auth: [ 
+      LeftSideBarPaths.leftSibars.getList,
+      'template-groups/menu'
+    ],
+    icon:<AiFillFile/>,
+  },
 
 ]
 

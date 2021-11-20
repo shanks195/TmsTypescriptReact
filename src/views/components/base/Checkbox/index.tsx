@@ -1,8 +1,18 @@
-import React from "react";
+import {
+  ChangeEvent,
+  forwardRef,
+  ForwardRefRenderFunction,
+  ReactNode,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
+} from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import MuiCheckbox from '@mui/material/Checkbox';
 import clsx from "clsx";
+import { InputLabel } from "@mui/material";
 
 export type CheckboxVariant = 'primary' | 'secondary';
 export type CheckboxPosition = 'top' | 'start' | 'bottom' | 'end';
@@ -15,18 +25,19 @@ export interface CheckboxValue{
 export interface CheckboxOption {
   checked?: boolean;
   disabled?: boolean;
-  label?: React.ReactNode;
+  label?: ReactNode;
   position?: CheckboxPosition;
-  value: string | number;
+  value: string | number ;
   variant?: CheckboxVariant;
 }
 
 export interface CheckboxProps extends Partial<CheckboxOption>{
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
   name?: string;
   onChange?(): void;
   options?: CheckboxOption[];
+  required?: boolean;
 }
 
 export interface CheckboxRef {
@@ -37,7 +48,7 @@ export interface CheckboxRef {
 }
 
 export interface CheckboxComponent
-  extends React.ForwardRefRenderFunction<CheckboxRef, CheckboxProps> {}
+  extends ForwardRefRenderFunction<CheckboxRef, CheckboxProps> {}
 
 const Checkbox: CheckboxComponent = (props, ref) => {
 
@@ -52,31 +63,46 @@ const Checkbox: CheckboxComponent = (props, ref) => {
     options = [],
     position = 'end',
     value = '',
-    variant = 'primary'
+    variant = 'primary',
+    required = false,
   } = props;
 
-  if (!options.length){
-    options.push({
+  const getChecked = (opts: CheckboxOption[]) => opts.map(o => !!o.checked);
+  const fixedOptions = () => {
+    if(options.length) {
+      return options;
+    }
+    return [{
       checked,
       disabled,
       label: label ?? children,
       position,
       value,
       variant
-    });
+    }];
   }
 
-  const getChecked = (opts: CheckboxOption[]) => opts.map(o => !!o.checked);
+  const [ CheckboxOptions, setCheckboxOptions ] = useState<CheckboxOption[]>(() => {
+    return fixedOptions();
+  });
 
-  const [ CheckboxOptions, setCheckboxOptions ] = React.useState<CheckboxOption[]>(options);
-  const [ CurrentChecked, setCurrentChecked ] = React.useState<boolean[]>([]);
-  const Checked = React.useRef<boolean[]>(getChecked(CheckboxOptions));
+  const [ CurrentChecked, setCurrentChecked ] = useState<boolean[]>(getChecked(fixedOptions()));
 
-  React.useEffect(() => {
+  const Checked = useRef<boolean[]>(getChecked(fixedOptions()));
+
+  useEffect(() => {
     CheckboxOptions === undefined || setCurrentChecked(getChecked(CheckboxOptions));
   }, [ CheckboxOptions ]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    const newOptions = fixedOptions();
+    if(JSON.stringify(newOptions) !== JSON.stringify(CheckboxOptions)) {
+      setCheckboxOptions(newOptions);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options])
+
+  useEffect(() => {
     if (CurrentChecked !== undefined && CurrentChecked.length){
       const changed = CurrentChecked.map((current, index) => {
         return Checked.current[index] === current;
@@ -90,7 +116,7 @@ const Checkbox: CheckboxComponent = (props, ref) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ CurrentChecked ]);
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     getValue(){
       return CheckboxOptions.map((option, index) => {
         return {
@@ -120,7 +146,7 @@ const Checkbox: CheckboxComponent = (props, ref) => {
 
   const checkboxClass = clsx(className);
 
-  const handleChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
     setCurrentChecked(
       CurrentChecked.map(
         (current, pos) => pos === index ? e.target.checked : current
@@ -130,11 +156,15 @@ const Checkbox: CheckboxComponent = (props, ref) => {
 
   return <FormGroup row className={ checkboxClass }>
     {
+      !!label &&
+      <InputLabel className="w-full" required={ required }>{ label }</InputLabel>
+    }
+    {
       CheckboxOptions.map((option, index) => {
         if (!option.label){
           return <MuiCheckbox
             key={ index }
-            checked={ option.checked }
+            checked={ CurrentChecked[index] }
             onChange={ handleChange(index) }
             color={ option.variant }
             disabled={ option.disabled }
@@ -145,11 +175,11 @@ const Checkbox: CheckboxComponent = (props, ref) => {
 
         return <FormControlLabel
           key={ index }
-          label={ option.label }
+          label={ <>{ option.label }</> }
           labelPlacement={ option.position ?? 'end' }
           control={
             <MuiCheckbox
-              checked={ option.checked }
+              checked={ CurrentChecked[index] ?? false }
               onChange={ handleChange(index) }
               color={ option.variant ?? 'primary' }
               disabled={ option.disabled }
@@ -163,4 +193,4 @@ const Checkbox: CheckboxComponent = (props, ref) => {
   </FormGroup>
 };
 
-export default React.forwardRef(Checkbox);
+export default forwardRef(Checkbox);

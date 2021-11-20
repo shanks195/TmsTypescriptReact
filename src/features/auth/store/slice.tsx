@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IError, RootState } from "types";
-import { IAccountState, ILoginForm, IUser } from "types/models/Account";
+import { IAccountState, ILoginForm } from "types/models/Account";
 
 const initialState: IAccountState = {
   isAuth: false,
   isInitial: false,
   isFetching: false,
+  isFetched: false,
   user: undefined,
   errors: []
 };
@@ -21,7 +22,7 @@ const AuthSlice = createSlice({
       state.user = undefined;
       state.errors = [];
     },
-    accessToken(state, action: PayloadAction<string>) {
+    accessToken(state) {
       state.isInitial = false;
       state.isAuth = false;
       state.user = undefined;
@@ -32,20 +33,22 @@ const AuthSlice = createSlice({
       state.isAuth = false;
       state.isInitial = true;
       state.isFetching = true;
+      state.isFetched = false;
       state.user = undefined;
       state.errors = [];
     },
-    loginSuccess(state, action: PayloadAction<IUser>) {
+    loginSuccess(state, action: PayloadAction<string>) {
       state.isAuth = true;
       state.isInitial = true;
       state.isFetching = false;
-      state.user = action.payload;
+      // state.user = action.payload;
       state.errors = [];
     },
     loginFailure(state, action: PayloadAction<IError[]>) {
       state.isAuth = false;
       state.isInitial = true;
       state.isFetching = false;
+      state.isFetched = true;
       state.user = undefined;
       state.errors = action.payload;
     },
@@ -71,6 +74,7 @@ export const logout = AuthSlice.actions.logout;
 export const getIsAuth = (state: RootState) => state.auth.isAuth;
 export const getIsInitial = (state: RootState) => state.auth.isInitial;
 export const getIsFetching = (state: RootState) => state.auth.isFetching;
+export const getIsFetched = (state: RootState) => state.auth.isFetched;
 export const getCurrentUser = (state: RootState) => state.auth.user;
 export const getAuthErrors = (state: RootState) => state.auth.errors;
 

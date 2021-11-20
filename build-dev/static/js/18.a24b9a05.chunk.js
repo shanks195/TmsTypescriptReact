@@ -1,0 +1,1 @@
+(this["webpackJsonp@minerva/scb-tms"]=this["webpackJsonp@minerva/scb-tms"]||[]).push([[18],{566:function(s,t,n){"use strict";n.r(t);n(0);var c=n(7);t.default=function(){return Object(c.jsx)("div",{children:"Dashboard"})}}}]);

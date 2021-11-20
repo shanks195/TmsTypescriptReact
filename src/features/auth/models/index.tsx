@@ -1,10 +1,10 @@
-import { ILogin, IUser } from "types/models/Account";
+import { IHeaderRequest } from "types";
+import { ILogin, IUser, ILoginResponse } from "types/models/Account";
+import { formatPath, getAuthHeader, stringToBase64 } from "utils";
 import { apiGet, apiPost } from "utils/api";
-import { ILoginResponse } from "types/models/Account";
-import { formatPath, stringToBase64 } from "utils";
+import { API_KEY, APP_AUTH_ENABLE } from "utils/constants";
+
 import AccountPaths from "./paths";
-import {IHeaderRequest} from 'types/api'
-import { APP_AUTH_ENABLE, API_KEY } from "utils/constants";
 
 export const authLogin = (data: ILogin) => {
   const { username, password } = data;
@@ -13,8 +13,7 @@ export const authLogin = (data: ILogin) => {
   };
 
   if (APP_AUTH_ENABLE){
-    const token = stringToBase64(username + ':' + password);
-    headers.Authorization = 'Basic ' + token;
+    Object.assign(headers, getAuthHeader(stringToBase64(username + ':' + password), 'Basic'));
     headers.apikey = API_KEY;
     headers['MNV-encode'] = 0;
     headers['Content-Type'] = 'application/json; charset=utf-8';
@@ -23,7 +22,5 @@ export const authLogin = (data: ILogin) => {
 };
 
 export const authToken = (id: string | number) => {
-  return apiGet<IUser>(
-    formatPath(AccountPaths.AccessToken, id)
-  );
+  return apiGet<IUser>(formatPath(AccountPaths.getId, id));
 }

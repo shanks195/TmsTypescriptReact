@@ -14,9 +14,16 @@ const positionStyle = makeStyles(() => ({
     ".flex": {
       display: "flex"
     },
+    ".flex-inline": {
+      display: 'inline-flex!important'
+    },
     ".flex-column": {
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column!important"
+    },
+    ".flex-row": {
+      display: "flex",
+      flexDirection: "row!important"
     },
     ".flex-center": {
       display: "flex!important",
@@ -38,11 +45,14 @@ const positionStyle = makeStyles(() => ({
     ".justify-between": {
       justifyContent: "space-between!important"
     },
-    "justify-center": {
+    ".justify-center": {
       justifyContent: "center"
     },
-    "justify-around": {
+    ".justify-around": {
       justifyContent: "space-around"
+    },
+    ".justify-left": {
+      justifyContent: "left"
     },
     ".items-start": {
       alignItems: "flex-start"
@@ -77,7 +87,7 @@ const positionStyle = makeStyles(() => ({
       top: 0
     },
     ".absolute": {
-      position: "absolute"
+      position: "absolute !important"
     },
     ".relative": {
       position: "relative"

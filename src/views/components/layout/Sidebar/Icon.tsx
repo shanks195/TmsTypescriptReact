@@ -1,6 +1,7 @@
-import { FC, Fragment } from 'react';
+import { FC } from 'react';
 import { IRoute } from 'types';
 import MuiIcon from '@mui/material/Icon';
+import CircleIcon from '@mui/icons-material/Circle';
 
 export interface IconProps{
   item: IRoute;
@@ -16,11 +17,13 @@ const Icon: FC<IconProps> = props => {
     </MuiIcon>
   }
 
-  return <Fragment>
+  if (item.iconText){
     <div className="nav-bullet-text ml-5 text-11">
       { item.iconText }
     </div>
-  </Fragment>
+  }
+
+  return <CircleIcon className="sidebar-non-icon" />
 
 }
 

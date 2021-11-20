@@ -27,6 +27,9 @@ const uploadStyle = makeStyles((attach) => ({
         "& .upload-icon": {
           color: "#9599c1",
           fontSize: "13px",
+          "& .text-low":{
+            textTransform:"lowercase"
+          },
           "& .upload-button": {
             marginLeft: "16px",
             backgroundColor: "#4a5fec",

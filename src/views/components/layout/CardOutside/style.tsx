@@ -17,6 +17,7 @@ const outsideStyle = makeStyles(() => ({
     
   },
   content: {
+    
     padding: '16px'
   }
 })) as Function;

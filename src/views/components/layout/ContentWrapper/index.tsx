@@ -1,22 +1,51 @@
-import React from 'react';
+import { FC } from 'react';
+import { Outlet, Route, Routes } from 'react-router-dom';
+import { IRoute } from 'types';
 import clsx from 'clsx';
-import ScrollBar from 'react-perfect-scrollbar';
+import Scrollbar from '../Scrollbar';
 import SidebarRoutes from 'app/navigations/sidebar';
 import wrapperStyle from './style';
-import { Route } from 'react-router-dom';
+import Topbar from '../Topbar';
 
-const ContentWrapper: React.FC = () => {
+const ContentWrapper: FC = () => {
 
   const classes = wrapperStyle();
 
-  return <div className={ clsx(classes.root, 'wh-full') }>
-    <div className={ clsx(classes.wrapper, 'relative wh-full') }>
-      <ScrollBar options={{ suppressScrollX: true }}>
-        {SidebarRoutes.map((route, index) => {
-          const { path, exact, component } = route;
-          return <Route path={ path } exact={ exact } key={ index } component={ component } />
-        })}
-      </ScrollBar>
+  const listenRoutes = (routes: IRoute[]) => {
+    return routes?.map(({ path = '', component: Comp, children, name }, i) => {
+      if ((!path || !Comp) && !children?.length) return null;
+      let routePath = path;
+
+      if (path && children?.length){
+        routePath = path.replace(/\/?(\?.*)*$/g, '/*$1').replace(/\/\*\/\*?/, '/*');
+      }
+
+      if (!path && children?.length){
+        return <Route key={ i } path="*" element={ Comp ? <Comp /> : <Outlet /> }>
+          { listenRoutes(children) }
+        </Route>
+      }
+
+      routePath = path.replace(/\/?(\?.*)*$/g, '/*$1').replace(/\/\*\/\*?/, '/*');
+
+      return <Route 
+        path={ routePath } 
+        element={ Comp ? <Comp /> : <Outlet />  } 
+        key={ i }
+      />
+    });
+  }
+
+  return <div className={ clsx(classes.root, 'h-full mscb-content-wrapper') }>
+    <div className="relative wh-full">
+      <Scrollbar>
+        <Topbar />
+        <div className={ `${classes.wrapper} h-full` }>
+          <Routes>
+            { listenRoutes(SidebarRoutes) }
+          </Routes>
+        </div>
+      </Scrollbar>
     </div>
   </div>
 

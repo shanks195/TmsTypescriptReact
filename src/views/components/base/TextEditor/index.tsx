@@ -1,4 +1,10 @@
-import React from "react";
+import { 
+    useRef, 
+    useEffect, 
+    useImperativeHandle, 
+    CSSProperties, 
+    ForwardRefRenderFunction, 
+    forwardRef} from "react";
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import clsx from "clsx";
@@ -17,23 +23,23 @@ interface ITextEditorProps {
     onChange?(value: string): void;
 }
 
-export interface TextEditorBaseComponent extends React.ForwardRefRenderFunction<TextEditorRef, ITextEditorProps> {}
+export interface TextEditorBaseComponent extends ForwardRefRenderFunction<TextEditorRef, ITextEditorProps> {}
 
 const TextEditorBase: TextEditorBaseComponent = (props, ref) => {
 
     const classes = textEditorStyle();
     const { value = '', onChange, width = '100%', height = '100%' } = props;
     const { quill, quillRef } = useQuill();
-    const QuillBox = React.useRef<HTMLDivElement>(null);
+    const QuillBox = useRef<HTMLDivElement>(null);
 
     const textEditorClass = clsx(classes.root, "mscb-texteditor-root");
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
         getValue: () => quill?.root.innerHTML ?? '',
         setValue: (val: string) => quill?.clipboard.dangerouslyPasteHTML(val)
     }));
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (quill) {
             quill.clipboard.dangerouslyPasteHTML(value);
             quill.on('text-change', () => onChange && onChange(quill.root.innerHTML));
@@ -45,7 +51,7 @@ const TextEditorBase: TextEditorBaseComponent = (props, ref) => {
         }
     }, [quill, value, onChange]);
 
-    const wrapperCss: React.CSSProperties = {
+    const wrapperCss: CSSProperties = {
         width: width
     };
 
@@ -56,4 +62,4 @@ const TextEditorBase: TextEditorBaseComponent = (props, ref) => {
     );
 }
 
-export default React.forwardRef(TextEditorBase);
+export default forwardRef(TextEditorBase);

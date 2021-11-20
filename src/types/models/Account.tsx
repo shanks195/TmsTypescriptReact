@@ -1,3 +1,4 @@
+import { ICodeName } from "../base";
 import { IError } from "../api";
 
 export interface IGlobal {
@@ -16,11 +17,7 @@ export interface IBranch {
   branch_tax_code: string;
 }
 
-export interface IDepartment {
-  code: string;
-  id: string;
-  name: string;
-}
+export interface IDepartment extends ICodeName{}
 
 export interface IUser {
   avatar: string;
@@ -41,15 +38,16 @@ export interface ILoginForm extends ILogin {
 }
 
 export interface ILoginResponse {
-  user_info: IUser;
-  access_token: string;
-  global_config: IGlobal;
+  user_id: string;
+  name: string;
+  token: string;
 }
 
 export interface IAccountState {
   isAuth: boolean;
   isInitial: boolean;
   isFetching: boolean;
+  isFetched: boolean;
   user?: IUser;
   errors: IError[];
 }

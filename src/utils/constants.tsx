@@ -1,8 +1,14 @@
 import { IError, ILanguage } from "types";
 
 export const API_BASE_URL = "/api/v2";
-export const APP_AUTH_ENABLE = false;
+
 export const API_KEY = '';
+
+export const APP_AUTH_ENABLE = true;
+
+export const APP_COUNTRY_DEFAULT = 'VN';
+
+export const APP_DATE_FORMAT = 'DD/MM/YYYY';
 
 export const APP_LANG_DEFAULT: ILanguage = {
   name: "Tiếng Việt",

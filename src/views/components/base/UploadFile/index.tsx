@@ -10,7 +10,7 @@ import {ImAttachment} from "react-icons/im"
 // import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-
+import {  useTranslation } from 'react-i18next';
 interface UploadFileProps {
   className?: string;
   attach?: boolean;
@@ -20,6 +20,8 @@ interface UploadFileComponent extends FunctionComponent<UploadFileProps> {}
 
 const UploadFile: UploadFileComponent = (props) => {
   const { className, attach = false } = props;
+
+  const { t } = useTranslation();
 
   const classes = uploadStyle();
 
@@ -135,7 +137,7 @@ const UploadFile: UploadFileComponent = (props) => {
             className="file-attachment"
               onClick={fileInputClicked}
             >
-              <ImAttachment className="mr-2"/>Tệp đính kèm
+              <ImAttachment className="mr-2"/>{t('Pages.Layout.Group.Attachments')}
             </span>
             <input
               ref={fileInputRef as unknown as React.RefObject<HTMLInputElement>}
@@ -156,13 +158,13 @@ const UploadFile: UploadFileComponent = (props) => {
           >
             <div className="drop-message">
               <p>
-                Thả (các) tệp của bạn vào đây hoặc{" "}
+               {t('Pages.Layout.Group.File.DropMessage')} {t('Common.Or')}{" "}
                 <span className="message-link" onClick={fileInputClicked}>
-                  tải lên
+                  {t('Pages.Layout.Group.File.upload')}
                 </span>
               </p>
               <div className="upload-icon">
-                Dung lượng tối đa 20MB
+                {t('Pages.Layout.Group.File.Capacity')} {" "}<span className="text-low">{t('Pages.Layout.Group.File.Maximum')}</span> 20MB
                 <Button
                   className="upload-button"
                   onClick={fileInputClicked}

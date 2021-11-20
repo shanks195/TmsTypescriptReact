@@ -1,14 +1,20 @@
-import React from 'react';
+import { FC, Fragment, memo } from 'react';
 import Sidebar from 'views/components/layout/Sidebar';
 import ContentWrapper from 'views/components/layout/ContentWrapper';
+import { useSelector } from 'react-redux';
+import { getIsAuth } from 'features/auth/store/slice';
 
-const Layout: React.FC = () => {
+const Layout: FC = () => {
 
-  return <React.Fragment>
+  const isAuth = useSelector(getIsAuth);
+
+  if (!isAuth) return null;
+
+  return <Fragment>
     <Sidebar />
     <ContentWrapper />
-  </React.Fragment>;
+  </Fragment>;
 
 }
 
-export default React.memo(Layout);
+export default memo(Layout);

@@ -5,7 +5,9 @@ import { createLogger } from "redux-logger";
 import { configureStore, Middleware } from "@reduxjs/toolkit";
 
 const sagaMiddleware = createSagaMiddleware();
-const logger = createLogger();
+const logger = createLogger({
+  diff: true
+});
 
 const middlewares: Middleware[] = [sagaMiddleware];
 
